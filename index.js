@@ -1,6 +1,6 @@
 const config = {
 no_ref: "off", //Control the HTTP referrer header, if you want to create an anonymous link that will hide the HTTP Referer header, please set to "on" .
-theme:"",//Homepage theme, use the empty value for default theme. To use urlcool theme, please fill with "theme/urlcool" .
+theme:"lainbo",//Homepage theme, use the empty value for default theme. To use urlcool theme, please fill with "theme/urlcool" .
 cors: "on",//Allow Cross-origin resource sharing for API requests.
 unique_link:false,//If it is true, the same long url will be shorten into the same short url
 custom_link:true,//Allow users to customize the short url.
@@ -11,7 +11,6 @@ const html404 = `<!DOCTYPE html>
 <body>
   <h1>404 Not Found.</h1>
   <p>The url you visit is not found.</p>
-  <p> <a href="https://github.com/xyTom/Url-Shorten-Worker/tree/crazypeace" target="_self">Fork me on GitHub</a> </p>
 </body>
 </html>`
 
@@ -49,7 +48,6 @@ async function sha512(url){
     )
     const hashArray = Array.from(new Uint8Array(url_digest)); // convert buffer to byte array
     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    //console.log(hashHex)
     return hashHex
 }
 async function checkURL(URL){
@@ -68,7 +66,6 @@ async function checkURL(URL){
 async function save_url(URL){
     let random_key=await randomString()
     let is_exist=await LINKS.get(random_key)
-    console.log(is_exist)
     if (is_exist == null)
         return await LINKS.put(random_key, URL),random_key
     else
@@ -76,7 +73,6 @@ async function save_url(URL){
 }
 async function is_url_exist(url_sha512){
   let is_exist = await LINKS.get(url_sha512)
-  console.log(is_exist)
   if (is_exist == null) {
     return false
   }else{
@@ -84,7 +80,6 @@ async function is_url_exist(url_sha512){
   }
 }
 async function handleRequest(request) {
-  console.log(request)
 
   // 查KV中的password对应的值
   const password_value = await LINKS.get("password");
@@ -97,9 +92,6 @@ async function handleRequest(request) {
       let req_keyPhrase=req["keyPhrase"]
       let req_password=req["password"]
 
-      console.log(req_url)
-      console.log(req_keyPhrase)
-      console.log(req_password)
       if(!await checkURL(req_url)){
         return new Response(`{"status":500,"key": "", "error":": Error: Url illegal."}`, {
           headers: response_header,
@@ -131,13 +123,11 @@ async function handleRequest(request) {
         }else{
           stat,random_key=await save_url(req_url)
           if (typeof(stat) == "undefined"){
-            console.log(await LINKS.put(url_sha512,random_key))
           }
         }
       }else{
         stat,random_key=await save_url(req_url)
       }
-      console.log(stat)
       if (typeof(stat) == "undefined"){
         return new Response(`{"status":200, "key":"`+random_key+`", "error": ""}`, {
           headers: response_header,
@@ -173,7 +163,6 @@ async function handleRequest(request) {
   const path = requestURL.pathname.split("/")[1]
   const params = requestURL.search;
 
-  console.log(path)
   if(!path){
     
     new Response(html404, {
@@ -186,7 +175,7 @@ async function handleRequest(request) {
   
   // 如果path符合password 显示应用界面
   if (path==password_value){  
-    let index= await fetch("https://cdn.jsdelivr.net/gh/xyTom/Url-Shorten-Worker@crazypeace-gh-pages/"+config.theme+"/index.html")
+    let index= await fetch(`https://cdn.jsdelivr.net/gh/xyTom/Url-Shorten-Worker@crazypeace-gh-pages/${config.theme}/index.html`)
     index=await index.text()
     index=index.replace(/__PASSWORD__/gm, password_value)
     return new Response(index, {
@@ -204,11 +193,10 @@ async function handleRequest(request) {
   } else {
       location = value
   }
-  console.log(value)
   
   if (location) {
     if (config.no_ref=="on"){
-      let no_ref= await fetch("https://cdn.jsdelivr.net/gh/xyTom/Url-Shorten-Worker@crazypeace-gh-pages/no-ref.html")
+      let no_ref= await fetch("https://ghproxy.com/https://raw.githubusercontent.com/lainbo/Url-Shorten-Worker/crazypeace-gh-pages/no-ref.html")
       no_ref=await no_ref.text()
       no_ref=no_ref.replace(/{Replace}/gm, location)
       return new Response(no_ref, {
