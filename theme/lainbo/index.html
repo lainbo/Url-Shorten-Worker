@@ -19,8 +19,8 @@
   <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
     crossorigin="anonymous"></script>
-  <script defer src="https://cdn.jsdelivr.net/gh/lainbo/Url-Shorten-Worker@crazypeace-gh-pages/main1.js"
-    crossorigin="anonymous"></script>
+  <!-- <script defer src="https://cdn.jsdelivr.net/gh/lainbo/Url-Shorten-Worker@crazypeace-gh-pages/main1.js"
+    crossorigin="anonymous"></script> -->
   <!-- <script defer src="/main1.js"></script> -->
 </head>
 
@@ -28,56 +28,54 @@
   <div id="app" class="bg-#f3f4f6 min-h-100vh">
     <main class="flow-root">
       <form class="space-y-8 bg-#fff max-w-768px mx-auto my-0 rounded-lg shadow-xl sm:mt-10vh">
-        <div class="space-y-8 sm:space-y-5">
-          <div>
-            <div class="h-14 flex items-center px-4">
-              <h2 class="text-24px leading-6 font-medium text-gray-900">短链接生成</h2>
+        <div class="pb-10">
+          <div class="h-16 flex items-center px-4">
+            <h2 class="text-24px leading-6 font-medium text-gray-900">短链接生成</h2>
+          </div>
+
+          <div class="space-y-6 sm:space-y-5 px-4">
+            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+              <label id="basic-addon1" for="originalUrl"
+                class="block text-md font-medium text-gray-700 sm:mt-px sm:pt-2"> 原始链接
+              </label>
+              <div class="mt-1 sm:mt-0 sm:col-span-2">
+                <div class="max-w-lg flex rounded-md shadow-sm">
+                  <input v-model="longURL" aria-describedby="basic-addon1" type="text" name="originalUrl"
+                    class="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0  rounded-md sm:text-sm border-gray-300">
+                </div>
+              </div>
+            </div>
+            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start  sm:pt-5">
+              <label id="basic-addon2" for="customUrl" class="block text-md font-medium text-gray-700 sm:mt-px sm:pt-2">
+                自定义后缀
+              </label>
+              <div class="mt-1 sm:mt-0 sm:col-span-2">
+                <div class="max-w-lg flex rounded-md shadow-sm">
+                  <input v-model="keyPhrase" type="text" name="customUrl" aria-describedby="basic-addon2"
+                    placeholder="不填写将随机分配"
+                    class="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0  rounded-md sm:text-sm border-gray-300">
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-end">
+              <button type="button"
+                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                @click="shorturl">{{submitText}}</button>
+            </div>
+            <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+              <label id="basic-addon2" for="pagePassword"
+                class="block text-md font-medium text-gray-700 sm:mt-px sm:pt-2"> 生成结果
+              </label>
+              <div class="mt-1 select-all h-full flex items-center sm:mt-0 sm:col-span-2">
+                {{resultUrl || "结果将在这里显示"}}
+                <!-- <div class="max-w-lg flex rounded-md shadow-sm">
+                  <input v-model="resultUrl" type="text" name="pagePassword" readonly="true"
+                    class="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0  rounded-md sm:text-sm border-gray-300">
+                </div> -->
+              </div>
             </div>
 
-            <div class="space-y-6 sm:space-y-5 px-4">
-              <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                <label id="basic-addon1" for="originalUrl"
-                  class="block text-md font-medium text-gray-700 sm:mt-px sm:pt-2"> 原始链接
-                </label>
-                <div class="mt-1 sm:mt-0 sm:col-span-2">
-                  <div class="max-w-lg flex rounded-md shadow-sm">
-                    <input v-model="longURL" aria-describedby="basic-addon1" placeholder="Example: https://example.com/"
-                      oninput="loadUrlList()" type="text" name="originalUrl"
-                      class="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0  rounded-md sm:text-sm border-gray-300">
-                  </div>
-                </div>
-              </div>
-              <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start  sm:pt-5">
-                <label id="basic-addon2" for="customUrl"
-                  class="block text-md font-medium text-gray-700 sm:mt-px sm:pt-2"> 自定义后缀
-                </label>
-                <div class="mt-1 sm:mt-0 sm:col-span-2">
-                  <div class="max-w-lg flex rounded-md shadow-sm">
-                    <input v-model="keyPhrase" type="text" name="customUrl" aria-describedby="basic-addon2"
-                      placeholder="不填写将随机分配"
-                      class="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0  rounded-md sm:text-sm border-gray-300">
-                  </div>
-                </div>
-              </div>
-              <div>
-                <button type="button"
-                  class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  @click="shorturl">{{submitText}}</button>
-              </div>
-              <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                <label id="basic-addon2" for="pagePassword"
-                  class="block text-md font-medium text-gray-700 sm:mt-px sm:pt-2"> 生成结果
-                </label>
-                <div class="mt-1 sm:mt-0 sm:col-span-2">
-                  <div class="max-w-lg flex rounded-md shadow-sm">
-                    <input type="text" name="pagePassword" value="__PASSWORD__" readonly="true" id="passwordText"
-                      aria-describedby="basic-addon3"
-                      class="flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0  rounded-md sm:text-sm border-gray-300">
-                  </div>
-                </div>
-              </div>
-
-              <div class="space-x-4">
+            <!-- <div class="space-x-4">
                 <button type="button"
                   class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">加载本地存储</button>
                 <button type="button"
@@ -96,11 +94,10 @@
                       some text </span>
                   </div>
                 </div>
-              </div>
-            </div>
+              </div> -->
           </div>
       </form>
-      <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel"
+      <!-- <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -118,7 +115,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </main>
   </div>
   <script>
@@ -128,9 +125,10 @@
         return {
           longURL: "", // 原始链接
           keyPhrase: "", // 自定义后缀
-          submitText: "生成短链接",
-          submitLoading: false,
-          passwordText: window.location.pathname.slice(1),
+          resultUrl: "", // 生成的结果
+          submitText: "生成短链接", // 提交按钮文字
+          submitLoading: false, // 提交按钮加载状态
+          passwordText: window.location.pathname.slice(1), // 密码
         }
       },
       created() {
@@ -145,11 +143,14 @@
             keyPhrase: this.keyPhrase,
             password: this.passwordText
           }
-          try {
-            const data = await axios.post('https://u.lainbo.com/Xwr9G7Vc39u4rLb6', obj)
-            console.log('data:', data)
-          } catch (error) {
-            console.log('error:', error)
+          const data = await axios.post('https://u.lainbo.com/Xwr9G7Vc39u4rLb6', obj)
+          const res = data.data
+          if (data.status !== 200) {
+            alert('请求失败')
+          } else if (res.status !== 200) {
+            alert(res.error)
+          } else {
+            this.resultUrl = `${window.location.protocol}//${window.location.host}/${res.key}`
           }
         },
 
@@ -163,6 +164,8 @@
           this.submitLoading = true;
           this.submitText = "正在生成..."
           this.fetchShortUrl()
+          this.submitLoading = false;
+          this.submitText = "生成短链接"
           // fetch(window.location.pathname, {
           //   method: 'POST',
           //   headers: { 'Content-Type': 'application/json' },
