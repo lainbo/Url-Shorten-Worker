@@ -10,10 +10,21 @@
   <script src="https://fastly.jsdelivr.net/npm/vue@2"></script>
   <link rel="stylesheet"
     href="https://fastly.jsdelivr.net/gh/lainbo/Url-Shorten-Worker@crazypeace-gh-pages/components-v2.css">
+  <link rel="stylesheet" href="https://s1.hdslb.com/bfs/static/jinkela/long/font/regular.css">
   <style>
+    @font-face {
+      font-family: Cus_Emoji;
+      src: local("Twemoji Mozilla"), local("Segoe UI Emoji"), local("Segoe UI Symbol"), local("Apple Color Emoji"), local("Noto Color Emoji");
+      unicode-range: U+1F000-1F644, U+203C-3299;
+    }
+
     ::selection {
       background: #646cff;
       color: #fff;
+    }
+
+    html:lang(zh) body {
+      font-family: "HarmonyOS Sans SC", "HarmonyOS_Regular", Cus_Emoji, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
   </style>
   <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/fluent-emoji-flat:link.svg">
@@ -61,7 +72,7 @@
                 <div v-html="copySVG"></div>
               </button>
               <button type="button"
-                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                class="w-120px inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 @click="shorturl">
                 {{submitText}}
               </button>
@@ -130,7 +141,7 @@
             this.resultUrl = `${window.location.protocol}//${window.location.host}/${res.key}`
           }
           this.submitLoading = false
-          this.submitText = "生成完毕 🎉"
+          this.submitText = "生成完毕🎉"
 
           setTimeout(() => {
             this.submitText = this.$options.data().submitText
