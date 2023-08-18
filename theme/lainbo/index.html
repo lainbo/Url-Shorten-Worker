@@ -91,7 +91,7 @@
           resultUrl: "", // 生成的结果
           submitText: "生成短链接", // 提交按钮文字
           submitLoading: false, // 提交按钮加载状态
-          passwordText: window.location.pathname.slice(1), // 密码
+          pathName: window.location.pathname // 路径名
         }
       },
       created() {
@@ -118,9 +118,9 @@
             cmd: "add",
             url: this.longURL,
             keyPhrase: this.keyPhrase,
-            password: this.passwordText
+            password: this.pathName.slice(1)
           }
-          const data = await axios.post('https://u.lainbo.com/Xwr9G7Vc39u4rLb6', obj)
+          const data = await axios.post(this.pathName, obj)
           const res = data.data
           if (data.status !== 200) {
             alert('请求失败')
